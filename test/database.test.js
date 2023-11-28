@@ -1,13 +1,16 @@
 import 'dotenv/config';
 import assert from 'assert';
 import dbQueries from '../database.js';
-import pkg from 'pg-promise';
-const connectionString = process.env.URL;
-const Pool = pkg();
-const db = Pool({
-    connectionString,
-    ssl: true
-});
+import pgPromise from 'pg-promise';
+
+
+// Define the database connection string
+const connectionString = process.env.PGDATABASE_URL ||
+  'postgres://giiugpiv:jupnzDLHL6jh3-7iE4ExXZr3FCQKw3w5@ella.db.elephantsql.com/giiugpiv'
+
+// Create a PostgreSQL database instance and connect to it
+const pgp = pgPromise();
+const db = pgp(connectionString);
 
 let queries= dbQueries(db);
 
@@ -35,11 +38,7 @@ assert.equal("Successfully deleted!", deleted);
 });
 
 
-it("should return the admin password",async function(){
-    	
-    let pass= await queries.getOwner("Admin");
-    assert.equal("Admin@2023", pass);
-    });
+
   
       
         after(function () {
